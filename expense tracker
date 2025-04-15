@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Expense class to store description and amount
+class Expense {
+private:
+    string description;
+    double amount;
+
+public:
+    Expense(string desc, double amt) {
+        description = desc;
+        amount = amt;
+    }
+
+    string getDescription() const {
+        return description;
+    }
+
+    double getAmount() const {
+        return amount;
+    }
+
+    // Marking displayExpense() as const because it doesn't modify the object
+    void displayExpense() const {
+        cout << "Expense: " << description << " | Amount: " << amount << endl;
+    }
+};
+
+// ExpenseTracker class to manage expenses and the total amount
+class ExpenseTracker {
+private:
+    vector<Expense> expenses;
+    double total;
+
+public:
+    ExpenseTracker() {
+        total = 0.0;
+    }
+
+    void addExpense(string description, double amount) {
+        Expense expense(description, amount);
+        expenses.push_back(expense);
+        total += amount;
+    }
+
+    void showExpenses() const {
+        if (expenses.empty()) {
+            cout << "No expenses recorded." << endl;
+        } else {
+            // Loop through the vector of expenses, using a const reference
+            for (const auto &expense : expenses) {
+                expense.displayExpense();
+            }
+        }
+    }
+
+    double getTotal() const {
+        return total;
+    }
+};
+
+int main() {
+    ExpenseTracker tracker;
+    int choice;
+    string description;
+    double amount;
+    
+    while (true) {
+        cout << "\nExpense Tracker Menu:" << endl;
+        cout << "1. Add an expense" << endl;
+        cout << "2. Show all expenses" << endl;
+        cout << "3. Show total expenses" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Choose an option: ";
+        cin >> choice;
+        cin.ignore();  // to consume the leftover newline
+
+        switch (choice) {
+            case 1:
+                cout << "Enter expense description: ";
+                getline(cin, description);
+                cout << "Enter expense amount: ";
+                cin >> amount;
+                tracker.addExpense(description, amount);
+                cout << "Expense added successfully." << endl;
+                break;
+
+            case 2:
+                tracker.showExpenses();
+                break;
+
+            case 3:
+                cout << "Total expenses: " << tracker.getTotal() << endl;
+                break;
+
+            case 4:
+                cout << "Exiting Expense Tracker. Goodbye!" << endl;
+                return 0;
+
+            default:
+                cout << "Invalid option. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}
